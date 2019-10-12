@@ -1,0 +1,77 @@
+<script>
+var method = "POST"
+var url = "https://staging.creditninja.com/api/v1/payment/token_debit"
+var headers = {
+    "Accept":"application/json",
+    'Content-Type': 'application/json',
+    'Access-Control-Allow-Origin': '*',
+    'x-cn-api-key': '',
+    'x-cn-api-key-id': 2
+}
+
+const logTypes = {
+    info: (message, extra) => console.log('%c INFO: ', 'color:white; background-color:#3B5998', message, extra),
+    warn: (message, extra) => console.warn('%c WARN: ', 'color:white; background-color:#ffae42', message, extra),
+    error: (message, extra) => console.error(message, extra)
+}
+
+const logger = (type, message, extra = '') => logTypes[type](message, extra)
+
+var body = JSON.stringify({
+    "loan_id": "9535",
+    "full_name": "Dale Test",
+    "card_number": 4462030000000000,
+    "cvv": "984",
+    "exp_year": "84",
+    "exp_month": "09",
+    "zip_code": 98052,
+    "payment_amount": 450000.0,
+    "payment_id": "BD98G2I5"
+})
+
+function onreadystatechange(xhr, res) {
+        return function() {
+                debugger
+
+                var readyState = xhr.readyState;
+                var status = xhr.status;
+                var responseText = responseText
+    
+                logger('info', 'State Changed', readyState)
+                logger('info', 'Status', status)
+                logger('info', 'Response', responseText)
+
+                if (readyState === XMLHttpRequest.DONE && status === 200) {
+                        debugger
+                        logger('info', 'Request is Done')
+                        var headers = xhr.getAllResponseHeaders()
+                        logger('info', 'Headers', headers)
+                        debugger
+                        
+                        return {}
+                }
+        }
+}
+
+function primitiveFetch() {
+        logger('info', 'Beginning XML Http Request')
+        const xhr = new XMLHttpRequest()
+
+        logger('info', 'Setting event change handler')
+        xhr.onreadystatechange = onreadystatechange(xhr)
+
+        logger('info', 'Opening request')
+        xhr.open(method, url, true)
+
+        logger('info', 'Setting headers')
+        Object.entries(headers).forEach(([name, value]) => xhr.setRequestHeader(name, value))
+
+        logger('info', 'Sending request')
+        xhr.send(body)
+}
+
+logger('info', 'Welcome!')
+
+</script>
+
+<button onclick="primitiveFetch()" >Test debit_token</button>
